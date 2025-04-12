@@ -9,17 +9,17 @@ services:
       until pg_isready -h db -U postgres; do sleep 2; done &&
       
       echo 'Running migrations...' &&
-      alembic upgrade head &&
+      cd /app/backend && alembic upgrade head &&
       
-      python backend/app/db/drop_data_for_testing.py
-      python backend/app/db/init_data_for_testing.py;
+      python /app/backend/app/db/drop_data_for_testing.py &&
+      python /app/backend/app/db/init_data_for_testing.py;
       
       echo 'Starting Uvicorn...' &&
-      exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+      exec uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
       "
     volumes:
-        - ./backend:/app
-    working_dir: /backend/app
+      - ./backend:/app/backend
+    working_dir: /app
     ports:
       - "8000:8000"
     env_file:
@@ -28,7 +28,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      PYTHONPATH: "/backend/app"
+      PYTHONPATH: "/app"
       PYTHONUNBUFFERED: 1
       INIT_TEST_DATA: "False"
       NEED_TO_DROP_TEST_DATA: "False"

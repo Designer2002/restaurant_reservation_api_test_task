@@ -4,76 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>REST API Бронирование столиков в ресторане</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/script.js" defer></script>
+</head> 
 <body>
     <div class="dropdowns">
         <div class="dropdown hover">
             <a href="#">Столики</a>
             <ul>
-              <li><a href="#">Все столики</a></li>
-              <li><a href="#">Создать столик</a></li>
-              <li><a href="#">Удалить столик</a></li>
+              <li><a href="#" class="fetch-tables">Все столики</a></li>
+              <li><a href="#" class="create-table">Создать столик</a></li>
+              <li><a href="#" class="delete-table">Удалить столик</a></li>
             </ul>
           </div>
           <div class="dropdown hover">
             <a href="#">Брони</a>
             <ul>
-              <li><a href="#">Все брони</a></li>
-              <li><a href="#">Забронировать столик</a></li>
-              <li><a href="#">Снять бронь</a></li>
+              <li><a href="#"class="fetch-reservations">Все брони</a></li>
+              <li><a href="#"class="create-reservation">Забронировать столик</a></li>
+              <li><a href="#"class="delete-reservation">Снять бронь</a></li>
             </ul>
           </div>
     </div>
  <br><br>
-      <table class="container">
+      <table id="tablesContainer" class="container tables">
         <thead>
           <tr>
-            <th><h1>ID</h1></th>
+            <th><h1>ID столика</h1></th>
             <th><h1>Название</h1></th>
-            <th><h1>Колиечество стульев</h1></th>
+            <th><h1>Количество стульев</h1></th>
             <th><h1>Расположение</h1></th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>1</td>
-            <td>Большой стол</td>
-            <td>6</td>
-            <td>Банкетный зал</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Средний стол</td>
-            <td>4</td>
-            <td>Бар</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Средний стол</td>
-            <td>4</td>
-            <td>Банкетный зал</td>
-          </tr>
-          <tr>
-            <td>4</td>
-            <td>Маленький столик</td>
-            <td>2</td>
-            <td>2 этаж</td>
-          </tr>
-          <tr>
-            <td>5</td>
-            <td>Столик с диванами</td>
-            <td>2</td>
-            <td>У окна</td>
-          </tr>
-          <tr>
-            <td>6</td>
-            <td>Маленький столик</td>
-            <td>2</td>
-            <td>Терасса</td>
-          </tr>
+          
         </tbody>
       </table>
+      
+      <table id="reservationsContainer" class="container reservations">
+        <thead>
+            <tr>
+                <th><h1>ID брони</h1></th>
+                <th><h1>ID столика</h1></th>
+                <th><h1>Имя клиента</h1></th>
+                <th><h1>Время брони</h1></th>
+                <th><h1>Количество гостей</h1></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+
+    <!-- Модальное окно для добавления столика -->
+<div id="addTableModal" class="modal">
+  <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Добавить новый столик</h2>
+      <form id="addTableForm">
+          <div class="form-group">
+              <label for="tableName">Название:</label>
+              <input type="text" id="tableName" required>
+          </div>
+          <div class="form-group">
+              <label for="tableCapacity">Количество мест:</label>
+              <input type="number" id="tableCapacity" required>
+          </div>
+          <div class="form-group">
+              <label for="tableLocation">Расположение:</label>
+              <input type="text" id="tableLocation" required>
+          </div>
+          <button type="submit">Добавить</button>
+      </form>
+  </div>
+</div>
+
+<!-- Модальное окно для удаления столика -->
+<div id="deleteTableModal" class="modal">
+  <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Удалить столик</h2>
+      <form id="deleteTableForm">
+          <div class="form-group">
+              <label for="tableToDelete">Выберите столик:</label>
+              <select id="tableToDelete" required>
+                  <option value="">-- Выберите столик --</option>
+              </select>
+          </div>
+          <button type="submit">Удалить</button>
+      </form>
+  </div>
+</div>
+
+<!-- Модальное окно для добавления брони -->
+<div id="addReservationModal" class="modal">
+  <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Создать бронь</h2>
+      <form id="addReservationForm">
+          <div class="form-group">
+              <label for="reservationTable">Столик:</label>
+              <select id="reservationTable" required>
+                  <option value="">-- Выберите столик --</option>
+              </select>
+          </div>
+          <div class="form-group">
+              <label for="customerName">Имя клиента:</label>
+              <input type="text" id="customerName" required>
+          </div>
+          <div class="form-group">
+              <label for="reservationTime">Дата и время:</label>
+              <input type="datetime-local" id="reservationTime" required>
+          </div>
+          <div class="form-group">
+              <label for="guestsCount">Количество гостей:</label>
+              <input type="number" id="guestsCount" required>
+          </div>
+          <button type="submit">Забронировать</button>
+      </form>
+  </div>
+</div>
+
+<!-- Модальное окно для удаления брони -->
+<div id="deleteReservationModal" class="modal">
+  <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Отменить бронь</h2>
+      <form id="deleteReservationForm">
+          <div class="form-group">
+              <label for="reservationToDelete">Выберите бронь:</label>
+              <select id="reservationToDelete" required>
+                  <option value="">-- Выберите бронь --</option>
+              </select>
+          </div>
+          <button type="submit">Отменить</button>
+      </form>
+  </div>
+</div>
 
 </body>
 </html>

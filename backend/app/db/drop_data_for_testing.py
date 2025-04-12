@@ -1,6 +1,6 @@
 import os
 from sqlalchemy import text
-from app.database import SessionLocal
+from backend.app.database import SessionLocal
 
 # Настройки подключения (должны совпадать с вашим приложением)
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@db/restaurant")

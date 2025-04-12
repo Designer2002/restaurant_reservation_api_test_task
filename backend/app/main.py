@@ -1,14 +1,22 @@
 from datetime import datetime, timedelta
-from database import SessionLocal
-from models.reservation import Reservation
+from backend.app.database import SessionLocal
+from backend.app.models.reservation import Reservation
 from fastapi import FastAPI
 import asyncio
-from routes import tables_router, reservations_router
+from fastapi.middleware.cors import CORSMiddleware
+from backend.app.routes import tables_router, reservations_router
 
 app = FastAPI()
 
 app.include_router(tables_router)
 app.include_router(reservations_router)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Для разработки, в production укажите конкретные домены
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 async def cleanup_reservations():
     while True:

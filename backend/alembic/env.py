@@ -8,8 +8,8 @@ from alembic import context
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 
 
-from database import Base
-from models import *  
+from backend.app.database import Base
+from backend.app.models import *  
 
 config = context.config
 fileConfig(config.config_file_name)

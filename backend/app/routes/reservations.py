@@ -4,9 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func, and_
 from sqlalchemy.sql.expression import cast
 from sqlalchemy import text
-from app.database import get_db
-from app.models import Reservation, Table
-from app.schemas import ReservationCreate, ReservationResponse
+from backend.app.database import get_db
+from backend.app.models import Reservation, Table
+from backend.app.schemas import ReservationCreate, ReservationResponse
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 router = APIRouter(prefix="/reservations")

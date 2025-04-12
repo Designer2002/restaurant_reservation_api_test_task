@@ -2,8 +2,8 @@ import os
 from datetime import datetime, timedelta
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.sql import text 
-from database import SessionLocal
-from models import Table, Reservation
+from backend.app.database import SessionLocal
+from backend.app.models import Table, Reservation
 
 def init_test_data():
     if os.getenv("INIT_TEST_DATA", "False").lower() != "true":

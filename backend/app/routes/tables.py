@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from app.database import get_db
-from app.models import Table
-from app.schemas import TableCreate, TableResponse
+from backend.app.database import get_db
+from backend.app.models import Table
+from backend.app.schemas import TableCreate, TableResponse
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
