@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
-from app.database import SessionLocal
-from app.models.reservation import Reservation
+from database import SessionLocal
+from models.reservation import Reservation
 from fastapi import FastAPI
 import asyncio
-from app.routes import tables_router, reservations_router
+from routes import tables_router, reservations_router
 
 app = FastAPI()
 
