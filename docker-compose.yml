@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: >
+      sh -c "
+      echo 'Waiting for database...' &&
+      until pg_isready -h db -U postgres; do sleep 2; done &&
+      
+      echo 'Running migrations...' &&
+      alembic upgrade head &&
+      
+      python app/db/init_data_for_testing.py;
+      python app/db/drop_data_for_testing.py;
+      
+      
+      echo 'Starting Uvicorn...' &&
+      exec uvicorn app.main:app --host 0.0.0.0 --port 8000
+      "
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PYTHONUNBUFFERED: 1
+      INIT_TEST_DATA: "False"
+      NEED_TO_DROP_TEST_DATA: "False"
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "restaurant"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
