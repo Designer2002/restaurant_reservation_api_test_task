@@ -10,9 +10,7 @@ services:
       
       echo 'Running migrations...' &&
       cd /app/backend && alembic upgrade head &&
-      
-      python /app/backend/app/db/drop_data_for_testing.py &&
-      python /app/backend/app/db/init_data_for_testing.py;
+
       
       echo 'Starting Uvicorn...' &&
       exec uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
@@ -30,8 +28,7 @@ services:
     environment:
       PYTHONPATH: "/app"
       PYTHONUNBUFFERED: 1
-      INIT_TEST_DATA: "False"
-      NEED_TO_DROP_TEST_DATA: "False"
+      
 
   frontend:
     image: nginx:alpine
@@ -58,6 +55,14 @@ services:
       retries: 10
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+  test_db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test_db  # Автоматически создаст эту БД
+    ports:
+      - "5432:5432"
+      
 volumes:
   postgres_data:

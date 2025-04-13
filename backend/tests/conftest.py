@@ -8,8 +8,8 @@ from sqlalchemy.orm import sessionmaker
 from backend.app.main import app
 from backend.app.database import Base, get_db
 
-#TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/test_db"
-TEST_DATABASE_URL = "http://localhost:8000"
+TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/test_db"
+#TEST_DATABASE_URL = "http://localhost:8000"
 @pytest_asyncio.fixture(scope="session")
 async def async_engine():
     engine = create_async_engine(
@@ -28,7 +28,7 @@ async def wait_for_db(engine, max_attempts=5):
                 return True
         except Exception as e:
             if attempt == max_attempts - 1:
-                raise ConnectionError(f"Не удалось подключиться к БД после {max_attempts} попыток") from e
+                raise ConnectionError(f"{e.__str__()}\nНе удалось подключиться к БД после {max_attempts} попыток") from e
             await asyncio.sleep(1)
 
 @pytest_asyncio.fixture(scope="session", autouse=True)
