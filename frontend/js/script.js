@@ -2,15 +2,17 @@
 function setupModal(modalId, openButtonClass, closeButtonClass) {
     const modal = document.getElementById(modalId);
     const openBtn = document.querySelector(openButtonClass);
-    const closeBtn = document.querySelector(`${modalId} ${closeButtonClass}`);
+    const closeBtn = document.querySelector(".close");
 
     openBtn?.addEventListener('click', () => {
         modal.style.display = 'block';
     });
 
-    closeBtn?.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+    }
 
     window.addEventListener('click', (event) => {
         if (event.target === modal) {
@@ -28,13 +30,13 @@ setupModal('deleteReservationModal', '.delete-reservation', '.close');
 function showTables() {
     document.getElementById('tablesContainer').style.display = 'block';
     document.getElementById('reservationsContainer').style.display = 'none';
-    updateTablesTable(); // Загружаем данные при первом показе
+    //updateTablesTable(); // Загружаем данные при первом показе
 }
 
 function showReservations() {
     document.getElementById('reservationsContainer').style.display = 'block';
     document.getElementById('tablesContainer').style.display = 'none';
-    updateReservationsTable(); // Загружаем данные при первом показе
+    //updateReservationsTable(); // Загружаем данные при первом показе
 }
 
 async function updateTablesTable() {
@@ -199,6 +201,70 @@ document.getElementById('addTableForm')?.addEventListener('submit', async (e) =>
     document.getElementById('addTableForm').reset();
 });
 
+// Создание столика
+async function createTable(tableData) {
+    const response = await fetch(`${API_URL}/tables`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tableData)
+    });
+    return await response.json();
+}
+
+// Удаление столика
+async function deleteTable(id) {
+    const response = await fetch(`${API_URL}/tables/${id}`, {
+        method: 'DELETE'
+    });
+    return await response.json();
+}
+async function createReservation() {
+    const tableId = prompt('Введите ID столика:');
+    if (!tableId) return;
+    
+    const customerName = prompt('Введите имя клиента:');
+    const reservationTime = prompt('Введите время брони (ГГГГ-ММ-ДД ЧЧ:ММ):');
+    const guestsCount = prompt('Введите количество гостей:');
+    
+    try {
+        const response = await fetch(`${API_URL}/reservations`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                table_id: parseInt(tableId),
+                customer_name: customerName,
+                reservation_time: reservationTime,
+                guests_count: parseInt(guestsCount)
+            })
+        });
+        
+        if (!response.ok) throw new Error('Ошибка при создании брони');
+        updateReservationsTable();
+    } catch (error) {
+        alert(`Ошибка: ${error.message}`);
+    }
+}
+
+async function deleteReservation() {
+    const reservationId = prompt('Введите ID брони для удаления:');
+    if (!reservationId) return;
+    
+    try {
+        const response = await fetch(`${API_URL}/reservations/${reservationId}`, {
+            method: 'DELETE'
+        });
+        
+        if (!response.ok) throw new Error('Ошибка при удалении');
+        updateReservationsTable();
+    } catch (error) {
+        alert(`Ошибка: ${error.message}`);
+    }
+}
+
 document.getElementById('deleteTableForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const modal = document.getElementById('deleteTableModal');
@@ -310,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.fetch-reservations')?.addEventListener('click', updateReservationsTable);
 });
 
+const API_URL="127.0.0.1:8000"
 document.getElementById('reservationsContainer').style.display = 'none';
 document.getElementById('tablesContainer').style.display = 'none';
 console.log("SCRIPT LOADED")

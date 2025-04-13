@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'pastryChef'; /*a name to be used later*/
-    src: url('fonts/ofont.ru_Pastry\ Chef.ttf'); /*URL to font*/
+    src: url('/fonts/ofont.ru_Pastry\ Chef.ttf'); /*URL to font*/
 }
 
 body {
@@ -215,14 +215,14 @@ h1 {
     transition-timing-function: line;
   }
   
-  table.reservations {
+  table.reservations, table.tables {
     margin-top: 40px;
     border-collapse: collapse;
-    width: 100%;
+    width: 90%;
 }
 
 table.reservations th, 
-table.reservations td {
+table.reservations td, table.tables td, table.tables th {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
